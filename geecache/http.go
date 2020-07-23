@@ -1,4 +1,4 @@
-package geecache
+package ago_test
 
 import (
 	"Cache/geecache/consistenthash"
@@ -47,7 +47,7 @@ func (p *HTTPPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !strings.HasPrefix(r.URL.Path, p.basePath) { // 首先判断路径的前缀是否是 basePath
 		panic("HTTPPool serving unexpected path:" + r.URL.Path)
 	}
-	p.Log("%s %s", r.Method, r.URL.Path)
+	p.Log("%s %s", r.Method, r.URL.Path) // 方法 + url
 	// /<basepath>/<groupname>/<key> required
 	parts := strings.SplitN(r.URL.Path[len(p.basePath):], "/",2)
 	if len(parts) != 2 {
@@ -107,6 +107,7 @@ var _ PeerGetter = (*httpGetter)(nil) // 为了用来确保 htppGetter 实现了
 /* 实现 PeerPicker 接口 */
 // Set 方法 实例化了一致性哈希算法，并添加了传入的节点
 func (p *HTTPPool) Set(peers ...string){
+	// fmt.Println(peers)  // [http://localhost:8001 http://localhost:8002 http://localhost:8003]
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	p.peers = consistenthash.New(defaultReplicas,nil)
@@ -114,7 +115,10 @@ func (p *HTTPPool) Set(peers ...string){
 	p.httpGetters = make(map[string]*httpGetter, len(peers))
 	for _, peer := range peers {
 		p.httpGetters[peer] = &httpGetter{baseURL:peer+p.basePath}
+		//fmt.Println("测试",peer) // 测试 http://localhost:8001
+		//fmt.Println(*p.httpGetters[peer]) // {http://localhost:8001/_geecache/}
 	}
+
 }
 
 //  PickPeer picks a peer according to key
@@ -122,10 +126,12 @@ func (p *HTTPPool) Set(peers ...string){
 func (p *HTTPPool) PickPeer(key string) (PeerGetter, bool) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	if peer := p.peers.Get(key); peer != "" && peer != p.self {
+	fmt.Println(key,"对应的peer为",p.peers.Get(key))
+	if peer := p.peers.Get(key); peer != "" && peer != p.self { // 判断 peer 不能为空 且不能为自己
 		p.Log("Pick peer %s", peer)
 		return p.httpGetters[peer], true
 	}
+	fmt.Println("没有找到合适的Peer（peer为自己 本地取数据就可以）") // 一个就是没有找到peer 另外就是peer是自己
 	return nil, false
 }
 

@@ -1,4 +1,4 @@
-package geecache
+package ago_test
 
 import (
 	"fmt"
@@ -25,6 +25,7 @@ type Getter interface {
 	Get(key string) ([]byte, error)
 }
 
+// 函数实现 Getter 接口
 /*
 定义一个函数类型 F，并且实现接口 A 的方法，然后在这个方法中调用自己。
 这是 Go 语言中将其他函数（参数返回值定义与 F 一致）转换为接口 A 的常用技巧
@@ -90,7 +91,8 @@ func (g *Group) Get(key string) (ByteView, error) {
 	if key == "" { // 判断key是否合法
 		return ByteView{}, fmt.Errorf("key is required")
 	}
-	if v, ok := g.mainCache.get(key); ok { // 在缓存中查找
+	if v, ok := g.mainCache.get(key); ok { // 在本地缓存中查找
+		fmt.Println("查找本地缓存")
 		log.Println("[GeeCache] hit")
 		return v, nil
 	}
@@ -112,8 +114,10 @@ func (g *Group) load(key string) (value ByteView, err error) {
 }
 
 func (g *Group) getLoacally(key string) (ByteView, error) {
+	fmt.Println("从本地节点取数据")
 	bytes, err := g.getter.Get(key) // 调用用户回调函数 获取源数据
 	if err != nil {
+		fmt.Println(err)
 		return ByteView{},err
 	}
 	value := ByteView{b: cloneBytes(bytes)} // 返回拷贝

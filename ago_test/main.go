@@ -8,10 +8,10 @@ import (
 )
 
 // 首先 用一个map 模拟耗时的数据库
-var db = map[string]string {
-	"Tom": "630",
+var db = map[string]string{
+	"Tom":  "630",
 	"Jack": "345",
-	"Sam": "562",
+	"Sam":  "562",
 }
 
 func main() {

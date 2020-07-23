@@ -1,4 +1,4 @@
-package geecache
+package ago_test
 
 import (
 	"Cache/lru"
