@@ -1,6 +1,7 @@
 package geecache
 
 import (
+	"Cache/geecache/singleflight"
 	"fmt"
 	"log"
 	"sync"
@@ -34,6 +35,8 @@ type Group struct {
 	getter    Getter
 	mainCache cache
 	peers     PeerPicker // 增加分布式
+	// 用singlefight.Group 确保 每个key 只被fetch 一次
+	loader *singleflight.Group
 }
 
 // 定义接口 Getter  和 回调函数 Get
@@ -73,8 +76,10 @@ func NewGroup(name string, cacheBytes int64, getter Getter) *Group {
 		name:      name,
 		getter:    getter,
 		mainCache: cache{cacheBytes: cacheBytes},
+		loader:    &singleflight.Group{},
 	}
 	groups[name] = g
+
 	return g
 }
 
@@ -99,22 +104,31 @@ func (g *Group) Get(key string) (ByteView, error) {
 	return g.load(key) // 没找到 调用load 方法
 }
 
+// day 06 修改增加 Do 将原来的load逻辑用Do包裹起来，这样确保了并发场景下针对相同的key，load过程只会调用一次
 func (g *Group) load(key string) (value ByteView, err error) {
-	// 更新分布式场景
-	if g.peers != nil {
-		if peer, ok := g.peers.PickPeer(key); ok {
-			if value, err = g.getFromPeer(peer, key); err == nil { // 注意此处 判断为 err == nil  没出错将数据返回
-				return value, nil
+	// 每个key 只被fetch 一次（无论本地还是远程）
+	// 不管并发调用者的数量
+	viewi, err := g.loader.Do(key, func() (i interface{}, e error) {
+		// 更新分布式场景
+		if g.peers != nil {
+			if peer, ok := g.peers.PickPeer(key); ok {
+				if value, err = g.getFromPeer(peer, key); err == nil { // 注意此处 判断为 err == nil  没出错将数据返回
+					return value, nil
+				}
+				log.Println("[GeeCache] Failed to get from peer", err) // 出错了 打印错误  之后从本地节点取数据
 			}
-			log.Println("[GeeCache] Failed to get from peer", err) // 出错了 打印错误  之后从本地节点取数据
 		}
+		return g.getLoacally(key) // 从本地节点获取
+		// 分布式场景下回调用 getFromPeer 从其他节点获取
+	})
+	if err == nil {
+		return viewi.(ByteView), nil
 	}
-	return g.getLoacally(key) // 从本地节点获取
-	// 分布式场景下回调用 getFromPeer 从其他节点获取
+	return
 }
 
 func (g *Group) getLoacally(key string) (ByteView, error) {
-	fmt.Println("从本地节点取数据")
+	// fmt.Println("从本地节点取数据")
 	bytes, err := g.getter.Get(key) // 调用用户回调函数 获取源数据 回调函数自己定义的
 	if err != nil {
 		fmt.Println(err)

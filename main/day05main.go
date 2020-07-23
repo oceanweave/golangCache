@@ -40,12 +40,13 @@ func startCacheServer(addr string, addrs []string, gee *geecache.Group) {
 
 // 启动一个 API 服务 端口9999， 与用户进行交互，用户感知
 func startAPIServer(apiAddr string, gee *geecache.Group) {
+	fmt.Println("启动Api-server")
 	http.Handle("/api", http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
-			fmt.Println("--------------")
-			fmt.Println("开始处理")
+			//fmt.Println("--------------")
+			//fmt.Println("开始处理")
 			key := r.URL.Query().Get("key")
-			fmt.Println("解析到的key为", key)
+			//fmt.Println("解析到的key为", key)
 			view, err := gee.Get(key) // 得到 key 对应的数据 比如 630 或 返回错误 kkk not exist
 			fmt.Println(view)
 			if err != nil {

@@ -41,7 +41,7 @@ func NewHTTPPool(self string) *HTTPPool {
 
 // 最为核心的ServeHTTP 方法
 func (p *HTTPPool) Log(format string, v ...interface{}) {
-	log.Printf("[Search %s] %s", p.self, fmt.Sprintf(format, v...))
+	log.Printf("[Server %s] %s", p.self, fmt.Sprintf(format, v...))
 }
 
 func (p *HTTPPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -86,7 +86,7 @@ func (h *httpGetter) Get(group string, key string) ([]byte, error) {
 		h.baseURL,
 		url.QueryEscape(group),
 		url.QueryEscape(key))
-	//fmt.Println("u", u)
+	// fmt.Println("u", u)
 	res, err := http.Get(u)
 	if err != nil {
 		return nil, err
@@ -128,12 +128,12 @@ func (p *HTTPPool) Set(peers ...string) {
 func (p *HTTPPool) PickPeer(key string) (PeerGetter, bool) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	fmt.Println(key, "对应的peer为", p.peers.Get(key))
+	// fmt.Println(key, "对应的peer为", p.peers.Get(key))
 	if peer := p.peers.Get(key); peer != "" && peer != p.self { // 判断 peer 不能为空 且不能为自己
 		p.Log("Pick peer %s", peer)
 		return p.httpGetters[peer], true
 	}
-	fmt.Println("没有找到合适的Peer（peer为自己 本地取数据就可以）") // 一个就是没有找到peer 另外就是peer是自己
+	// fmt.Println("没有找到合适的Peer（peer为自己 本地取数据就可以）") // 一个就是没有找到peer 另外就是peer是自己
 	return nil, false
 }
 

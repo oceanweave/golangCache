@@ -1,7 +1,6 @@
 package consistenthash
 
 import (
-	"fmt"
 	"hash/crc32"
 	"sort"
 	"strconv"
@@ -12,19 +11,19 @@ type Hash func(data []byte) uint32
 
 // Map 是一致性哈希算法的主数据结构
 type Map struct {
-	hash Hash // Hash 函数 hash
-	replicas int // 虚拟节点倍数 replicas
-	keys []int // 哈希环 keys
-	hashMap map[int]string // 虚拟节点和真实节点的映射表 hashMap
+	hash     Hash           // Hash 函数 hash
+	replicas int            // 虚拟节点倍数 replicas
+	keys     []int          // 哈希环 keys
+	hashMap  map[int]string // 虚拟节点和真实节点的映射表 hashMap
 	// 键是虚拟节点的哈希值 值是真实节点的名称
 }
 
 // New() 允许自定义虚拟节点倍数 和 Hash 函数
 func New(replicas int, fn Hash) *Map {
 	m := &Map{
-		replicas:replicas,
-		hash:fn,
-		hashMap:make(map[int]string),
+		replicas: replicas,
+		hash:     fn,
+		hashMap:  make(map[int]string),
 	}
 	if m.hash == nil {
 		m.hash = crc32.ChecksumIEEE
@@ -40,11 +39,11 @@ func New(replicas int, fn Hash) *Map {
 3. 使用 m.hash() 计算虚拟节点的哈希值，使用append(m.keys, hash) 添加到环上
 4. 在hashMap 中增加虚拟节点 和 真实节点的映射关系
 5. 最后一步，环上的哈希值排序
- */
+*/
 func (m *Map) Add(keys ...string) {
 	for _, key := range keys {
 		for i := 0; i < m.replicas; i++ {
-			hash := int(m.hash([]byte(strconv.Itoa(i)+key))) // 虚拟节点的哈希值
+			hash := int(m.hash([]byte(strconv.Itoa(i) + key))) // 虚拟节点的哈希值
 			m.keys = append(m.keys, hash)
 			m.hashMap[hash] = key
 		}
@@ -52,6 +51,7 @@ func (m *Map) Add(keys ...string) {
 	sort.Ints(m.keys) // 排序
 	// fmt.Println("keys" + " hash值", m.keys)
 }
+
 // 实现选择节点的 Get() 方法
 /*
 1. 计算 key 的哈希值
@@ -59,7 +59,7 @@ func (m *Map) Add(keys ...string) {
    若 idx == len(m.keys) 说明应选择 m.keys[0]
    因为 m.keys 是一个环状结构，所以用取余数的方式来处理这种情况
 3. 通过 hashMap 映射得到真实的节点
- */
+*/
 func (m *Map) Get(key string) string {
 	if len(m.keys) == 0 {
 		return ""
@@ -68,7 +68,7 @@ func (m *Map) Get(key string) string {
 	idx := sort.Search(len(m.keys), func(i int) bool { // 二分查找法 寻找满足函数的 最小索引
 		return m.keys[i] >= hash
 	})
-	fmt.Println("key为", key, "idx为",idx, "hash值对应的真实节点为", m.hashMap[m.keys[idx%len(m.keys)]])
+	// fmt.Println("key为", key, "idx为",idx, "hash值对应的真实节点为", m.hashMap[m.keys[idx%len(m.keys)]])
 	// hashMap 是存储 虚拟节点hash与真实的映射  keys 存储的是虚拟节点的hash
 
 	return m.hashMap[m.keys[idx%len(m.keys)]]
@@ -82,4 +82,4 @@ Search函数采用二分法搜索找到[0, n)区间内最小的满足f(i)==true�
 Search函数会返回满足f(i)==true的最小值i。如果没有该值，函数会返回n。
 注意，未找到时的返回值不是-1，这一点和strings.Index等函数不同。
 Search函数只会用区间[0, n)内的值调用f。
- */
+*/
