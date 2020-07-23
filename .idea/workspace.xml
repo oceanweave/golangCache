@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="19375eb2-2c7c-4678-8123-b31496ce173e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geecache/consistenthash/consistenthash.go" beforeDir="false" afterPath="$PROJECT_DIR$/geecache/consistenthash/consistenthash.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/geecache/geecache.go" beforeDir="false" afterPath="$PROJECT_DIR$/geecache/geecache.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/geecache/http.go" beforeDir="false" afterPath="$PROJECT_DIR$/geecache/http.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/day05main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main/day05main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/test.sh" beforeDir="false" afterPath="$PROJECT_DIR$/main/test.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/geecache/peer.go" beforeDir="false" afterPath="$PROJECT_DIR$/geecache/peer.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,28 +15,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/geecache/cache.go">
+        <entry file="file://$PROJECT_DIR$/geecache/peer.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="30">
-              <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main/day05main.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="615">
-              <caret line="47" column="43" selection-start-line="47" selection-start-column="43" selection-end-line="47" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/geecache/geecache_test.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="32" column="40" selection-start-line="32" selection-start-column="34" selection-end-line="32" selection-end-column="40" />
+            <state relative-caret-position="45">
+              <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -48,19 +26,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/geecache/geecache.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2235">
-              <caret line="154" column="16" selection-start-line="154" selection-start-column="16" selection-end-line="154" selection-end-column="16" />
+            <state relative-caret-position="441">
+              <caret line="161" column="12" selection-start-line="161" selection-start-column="12" selection-end-line="161" selection-end-column="12" />
+              <folding>
+                <element signature="e#18#113#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/geecache/http.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1185">
-              <caret line="88" column="7" selection-start-line="88" selection-start-column="7" selection-end-line="88" selection-end-column="7" />
+            <state relative-caret-position="-108">
+              <caret line="107" column="8" selection-start-line="107" selection-start-column="8" selection-end-line="107" selection-end-column="8" />
               <folding>
-                <element signature="e#18#130#0" expanded="true" />
+                <element signature="e#18#132#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -69,7 +50,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/geecache/consistenthash/consistenthash.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="990">
+            <state relative-caret-position="535">
               <caret line="70" column="7" selection-start-line="70" selection-start-column="7" selection-end-line="70" selection-end-column="7" />
             </state>
           </provider>
@@ -78,22 +59,6 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/go.mod">
           <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test/student.proto">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/test/student.pb.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1878" />
-          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -141,7 +106,6 @@
         <option value="$PROJECT_DIR$/cache.go" />
         <option value="$PROJECT_DIR$/main/test.go" />
         <option value="$PROJECT_DIR$/geecache/consistenthash/consistenthash_test.go" />
-        <option value="$PROJECT_DIR$/geecache/peer.go" />
         <option value="$PROJECT_DIR$/test04" />
         <option value="$PROJECT_DIR$/test5" />
         <option value="$PROJECT_DIR$/test6" />
@@ -151,16 +115,17 @@
         <option value="$PROJECT_DIR$/ago_test/geecache.go" />
         <option value="$PROJECT_DIR$/ago_test/main.go" />
         <option value="$PROJECT_DIR$/geecache/singleflight/singleflight.go" />
-        <option value="$PROJECT_DIR$/geecache/geecache.go" />
         <option value="$PROJECT_DIR$/main/day05main.go" />
         <option value="$PROJECT_DIR$/geecache/consistenthash/consistenthash.go" />
         <option value="$PROJECT_DIR$/main/test.sh" />
-        <option value="$PROJECT_DIR$/geecache/http.go" />
         <option value="$PROJECT_DIR$/test/student.proto.go" />
+        <option value="$PROJECT_DIR$/geecache/peer.go" />
+        <option value="$PROJECT_DIR$/geecache/geecache.go" />
+        <option value="$PROJECT_DIR$/geecache/http.go" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" fullScreen="true">
     <option name="x" value="726" />
     <option name="width" value="714" />
     <option name="height" value="900" />
@@ -187,11 +152,6 @@
               <item name="Cache" type="b2602c69:ProjectViewProjectNode" />
               <item name="Cache" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Cache" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Cache" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Cache" type="b2602c69:ProjectViewProjectNode" />
@@ -303,9 +263,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="682" y="0" width="758" height="900" extended-state="6" />
+    <frame x="682" y="0" width="758" height="900" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49371633" visible="true" weight="0.17178771" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49371633" visible="true" weight="0.17178771" />
       <window_info id="Structure" order="1" sideWeight="0.50628364" side_tool="true" weight="0.2514881" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -318,7 +278,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.32891566" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.22048193" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="10" visible="true" weight="0.22048193" />
       <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -484,13 +444,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/geecache/peer.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="5" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/geecache/cache.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -509,30 +462,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
           <caret line="32" column="40" selection-start-line="32" selection-start-column="34" selection-end-line="32" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/geecache/geecache.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2235">
-          <caret line="154" column="16" selection-start-line="154" selection-start-column="16" selection-end-line="154" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/geecache/http.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1185">
-          <caret line="88" column="7" selection-start-line="88" selection-start-column="7" selection-end-line="88" selection-end-column="7" />
-          <folding>
-            <element signature="e#18#130#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/geecache/consistenthash/consistenthash.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="990">
-          <caret line="70" column="7" selection-start-line="70" selection-start-column="7" selection-end-line="70" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -556,6 +485,40 @@
     <entry file="file://$PROJECT_DIR$/test/student.pb.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1878" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/geecache/consistenthash/consistenthash.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="535">
+          <caret line="70" column="7" selection-start-line="70" selection-start-column="7" selection-end-line="70" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/geecache/geecache.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="441">
+          <caret line="161" column="12" selection-start-line="161" selection-start-column="12" selection-end-line="161" selection-end-column="12" />
+          <folding>
+            <element signature="e#18#113#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/geecache/peer.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="45">
+          <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/geecache/http.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-108">
+          <caret line="107" column="8" selection-start-line="107" selection-start-column="8" selection-end-line="107" selection-end-column="8" />
+          <folding>
+            <element signature="e#18#132#0" expanded="true" />
+          </folding>
+        </state>
       </provider>
     </entry>
   </component>

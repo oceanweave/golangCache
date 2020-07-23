@@ -2,7 +2,9 @@ package geecache
 
 import (
 	"Cache/geecache/consistenthash"
+	pb "Cache/geecache/geecachepb"
 	"fmt"
+	"github.com/golang/protobuf/proto"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -64,12 +66,16 @@ func (p *HTTPPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	view, err := group.Get(key) // 获取缓存数据
+	// proto新增
+	body, err := proto.Marshal(&pb.Response{Value: view.ByteSlice()})
+
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Type", "application/octet-stream")
-	w.Write(view.ByteSlice())
+	//w.Write(view.ByteSlice())
+	w.Write(body) // proto 新增
 }
 
 /* 上面是服务端 */
@@ -80,28 +86,30 @@ type httpGetter struct {
 }
 
 // 获取返回值，并转化为[]bytes 类型
-func (h *httpGetter) Get(group string, key string) ([]byte, error) {
+//func (h *httpGetter) Get(group string, key string) ([]byte, error) {
+func (h *httpGetter) Get(in *pb.Request, out *pb.Response) error {
 	u := fmt.Sprintf(
 		"%v%v/%v",
 		h.baseURL,
-		url.QueryEscape(group),
-		url.QueryEscape(key))
+		url.QueryEscape(in.GetGroup()),
+		url.QueryEscape(in.GetKey()))
 	// fmt.Println("u", u)
 	res, err := http.Get(u)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("server returnes: %v", res.Status) // 没法访问到 返回错误
+		return fmt.Errorf("server returnes: %v", res.Status) // 没法访问到 返回错误
 	}
 
 	bytes, err := ioutil.ReadAll(res.Body)
+	err = proto.Unmarshal(bytes, out)
 	if err != nil {
-		return nil, fmt.Errorf("reading response body: %v", err)
+		return fmt.Errorf("reading response body: %v", err)
 	}
-	return bytes, nil
+	return nil
 }
 
 var _ PeerGetter = (*httpGetter)(nil) // 为了用来确保 htppGetter 实现了 PeerGetter接口
