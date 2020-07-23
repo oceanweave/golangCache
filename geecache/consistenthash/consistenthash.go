@@ -50,6 +50,7 @@ func (m *Map) Add(keys ...string) {
 		}
 	}
 	sort.Ints(m.keys) // 排序
+	// fmt.Println("keys" + " hash值", m.keys)
 }
 // 实现选择节点的 Get() 方法
 /*
@@ -67,7 +68,8 @@ func (m *Map) Get(key string) string {
 	idx := sort.Search(len(m.keys), func(i int) bool { // 二分查找法 寻找满足函数的 最小索引
 		return m.keys[i] >= hash
 	})
-	fmt.Println("key", key, "idx",idx)
+	fmt.Println("key为", key, "idx为",idx, "hash值对应的真实节点为", m.hashMap[m.keys[idx%len(m.keys)]])
+	// hashMap 是存储 虚拟节点hash与真实的映射  keys 存储的是虚拟节点的hash
 
 	return m.hashMap[m.keys[idx%len(m.keys)]]
 }

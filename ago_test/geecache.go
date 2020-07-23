@@ -18,23 +18,7 @@ import (
 应该由用户决定，那么交给用户好了
 回调函数：
 当缓存不存在时，调用这个函数，得到元数据
-*/
-
-// 核心数据结构 Group
-/*
-一个Group 可以认为是一个缓存的命名空间
-每个Group拥有一个唯一的名称 name
-比如可以创建三个Group
-缓存学生成绩的命名为scores，缓存学生信息的命名为 info， 缓存学生课程的命名为 courses
-getter 为 缓存未命中是获取源数据的回调 callback
-mainCache  就是一开始实现的 并发缓存
-*/
-type Group struct {
-	name      string
-	getter    Getter
-	mainCache cache
-	peers     PeerPicker // 增加分布式
-}
+ */
 
 // 定义接口 Getter  和 回调函数 Get
 type Getter interface {
@@ -45,7 +29,7 @@ type Getter interface {
 /*
 定义一个函数类型 F，并且实现接口 A 的方法，然后在这个方法中调用自己。
 这是 Go 语言中将其他函数（参数返回值定义与 F 一致）转换为接口 A 的常用技巧
-*/
+ */
 // 定义函数类型 GetterFunc 并实现 Getter 接口的Get方法
 // GetterFunc 定义拉取方法
 type GetterFunc func(key string) ([]byte, error)
@@ -55,9 +39,25 @@ func (f GetterFunc) Get(key string) ([]byte, error) {
 	return f(key)
 }
 
+// 核心数据结构 Group
+/*
+一个Group 可以认为是一个缓存的命名空间
+每个Group拥有一个唯一的名称 name
+比如可以创建三个Group
+缓存学生成绩的命名为scores，缓存学生信息的命名为 info， 缓存学生课程的命名为 courses
+getter 为 缓存未命中是获取源数据的回调 callback
+mainCache  就是一开始实现的 并发缓存
+ */
+type Group struct {
+	name string
+	getter Getter
+	mainCache cache
+	peers PeerPicker // 增加分布式
+}
+
 // 全局变量
 var (
-	mu     sync.RWMutex
+	mu sync.RWMutex
 	groups = make(map[string]*Group)
 )
 
@@ -70,9 +70,9 @@ func NewGroup(name string, cacheBytes int64, getter Getter) *Group {
 	mu.Lock()
 	defer mu.Unlock()
 	g := &Group{
-		name:      name,
-		getter:    getter,
-		mainCache: cache{cacheBytes: cacheBytes},
+		name:name,
+		getter:getter,
+		mainCache:cache{cacheBytes:cacheBytes},
 	}
 	groups[name] = g
 	return g
@@ -103,10 +103,10 @@ func (g *Group) load(key string) (value ByteView, err error) {
 	// 更新分布式场景
 	if g.peers != nil {
 		if peer, ok := g.peers.PickPeer(key); ok {
-			if value, err = g.getFromPeer(peer, key); err == nil { // 注意此处 判断为 err == nil  没出错将数据返回
+			if value,err = g.getFromPeer(peer, key); err!= nil {
 				return value, nil
 			}
-			log.Println("[GeeCache] Failed to get from peer", err) // 出错了 打印错误  之后从本地节点取数据
+			log.Println("[GeeCache] Failed to get from peer", err)
 		}
 	}
 	return g.getLoacally(key) // 从本地节点获取
@@ -115,13 +115,13 @@ func (g *Group) load(key string) (value ByteView, err error) {
 
 func (g *Group) getLoacally(key string) (ByteView, error) {
 	fmt.Println("从本地节点取数据")
-	bytes, err := g.getter.Get(key) // 调用用户回调函数 获取源数据 回调函数自己定义的
+	bytes, err := g.getter.Get(key) // 调用用户回调函数 获取源数据
 	if err != nil {
 		fmt.Println(err)
-		return ByteView{}, err
+		return ByteView{},err
 	}
 	value := ByteView{b: cloneBytes(bytes)} // 返回拷贝
-	g.populateCache(key, value)             // 并将源数据添加到缓存中
+	g.populateCache(key, value) // 并将源数据添加到缓存中
 	return value, nil
 }
 
@@ -138,8 +138,10 @@ func (g *Group) RegisterPeers(peers PeerPicker) {
 	g.peers = peers
 }
 
+
+
 func (g *Group) getFromPeer(peer PeerGetter, key string) (ByteView, error) {
-	bytes, err := peer.Get(g.name, key) // 获取数据 httpGetter 实现的 PeerGetter接口
+	bytes, err := peer.Get(g.name, key)
 	if err != nil {
 		return ByteView{}, err
 	}

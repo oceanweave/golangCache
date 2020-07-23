@@ -1,4 +1,4 @@
-package ago_test
+package geecache
 
 import (
 	"Cache/geecache/consistenthash"
@@ -10,31 +10,32 @@ import (
 	"strings"
 	"sync"
 )
+
 /*
 Go语言动手写Web框架 - Gee第一天 http.Handler
 https://geektutu.com/post/gee-day1.html
 http 库
 https://golang.org/pkg/net/http/
- */
+*/
 const (
 	defaultBasePath = "/_geecache/"
 	defaultReplicas = 50
 )
 
 type HTTPPool struct {
-	self string  //  用来记录自己的地址 包括主机名 IP 和端口
+	self     string //  用来记录自己的地址 包括主机名 IP 和端口
 	basePath string // 节点间通讯地址的前缀 默认为上面的
 	/* 添加节点选择功能 */
-	mu sync.Mutex // 保护 peers 和 httpGetters
-	peers *consistenthash.Map // 一致性哈希算法的Map 根据 key 选择节点
+	mu          sync.Mutex             // 保护 peers 和 httpGetters
+	peers       *consistenthash.Map    // 一致性哈希算法的Map 根据 key 选择节点
 	httpGetters map[string]*httpGetter // keyed by e.g. "http://10.0.0.2:8008"
 	// 映射远程节点对应的 httpGetter 每个远程节点对应一个 httpGetter 因为 httpGetter 与远程节点的地址 baseURL 有关
 }
 
 func NewHTTPPool(self string) *HTTPPool {
 	return &HTTPPool{
-		self:self,
-		basePath:defaultBasePath,
+		self:     self,
+		basePath: defaultBasePath,
 	}
 }
 
@@ -49,7 +50,7 @@ func (p *HTTPPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	p.Log("%s %s", r.Method, r.URL.Path) // 方法 + url
 	// /<basepath>/<groupname>/<key> required
-	parts := strings.SplitN(r.URL.Path[len(p.basePath):], "/",2)
+	parts := strings.SplitN(r.URL.Path[len(p.basePath):], "/", 2)
 	if len(parts) != 2 {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
@@ -59,7 +60,7 @@ func (p *HTTPPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	key := parts[1]
 	group := GetGroup(groupName) // 通过 groupName 获得group实例
 	if group == nil {
-		http.Error(w, "no such group:" + groupName, http.StatusNotFound)
+		http.Error(w, "no such group:"+groupName, http.StatusNotFound)
 		return
 	}
 	view, err := group.Get(key) // 获取缓存数据
@@ -84,7 +85,8 @@ func (h *httpGetter) Get(group string, key string) ([]byte, error) {
 		"%v%v/%v",
 		h.baseURL,
 		url.QueryEscape(group),
-		url.QueryEscape(key),)
+		url.QueryEscape(key))
+	//fmt.Println("u", u)
 	res, err := http.Get(u)
 	if err != nil {
 		return nil, err
@@ -92,12 +94,12 @@ func (h *httpGetter) Get(group string, key string) ([]byte, error) {
 	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("server returnes: %v", res.Status)
+		return nil, fmt.Errorf("server returnes: %v", res.Status) // 没法访问到 返回错误
 	}
 
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return nil, fmt.Errorf("resding response body: %v", err)
+		return nil, fmt.Errorf("reading response body: %v", err)
 	}
 	return bytes, nil
 }
@@ -106,15 +108,15 @@ var _ PeerGetter = (*httpGetter)(nil) // 为了用来确保 htppGetter 实现了
 
 /* 实现 PeerPicker 接口 */
 // Set 方法 实例化了一致性哈希算法，并添加了传入的节点
-func (p *HTTPPool) Set(peers ...string){
+func (p *HTTPPool) Set(peers ...string) {
 	// fmt.Println(peers)  // [http://localhost:8001 http://localhost:8002 http://localhost:8003]
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	p.peers = consistenthash.New(defaultReplicas,nil)
+	p.peers = consistenthash.New(defaultReplicas, nil)
 	p.peers.Add(peers...)
 	p.httpGetters = make(map[string]*httpGetter, len(peers))
 	for _, peer := range peers {
-		p.httpGetters[peer] = &httpGetter{baseURL:peer+p.basePath}
+		p.httpGetters[peer] = &httpGetter{baseURL: peer + p.basePath}
 		//fmt.Println("测试",peer) // 测试 http://localhost:8001
 		//fmt.Println(*p.httpGetters[peer]) // {http://localhost:8001/_geecache/}
 	}
@@ -126,7 +128,7 @@ func (p *HTTPPool) Set(peers ...string){
 func (p *HTTPPool) PickPeer(key string) (PeerGetter, bool) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
-	fmt.Println(key,"对应的peer为",p.peers.Get(key))
+	fmt.Println(key, "对应的peer为", p.peers.Get(key))
 	if peer := p.peers.Get(key); peer != "" && peer != p.self { // 判断 peer 不能为空 且不能为自己
 		p.Log("Pick peer %s", peer)
 		return p.httpGetters[peer], true
@@ -135,4 +137,4 @@ func (p *HTTPPool) PickPeer(key string) (PeerGetter, bool) {
 	return nil, false
 }
 
-var _ PeerPicker = (*HTTPPool)(nil)   // 验证  HTTPPool 是否实现了PeerPicker 接口
+var _ PeerPicker = (*HTTPPool)(nil) // 验证  HTTPPool 是否实现了PeerPicker 接口
